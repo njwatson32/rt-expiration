@@ -19,8 +19,8 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "OAuth Refresh Token and Consent Expiration"
-abbrev: "TODO - Abbreviation"
+title: "OAuth 2.0 Refresh Token and Consent Expiration"
+abbrev: "OAuth RT/Consent Expiration"
 category: info
 
 docname: draft-watson-rt-expiration-latest
@@ -78,7 +78,7 @@ begun to issue shorter-lived refresh tokens for two main reasons:
 * The authorization server or user may decide that the access being granted is too
 sensitive to allow indefinite access (e.g. mail or health data).
 * The authorization server enforces a maximum duration that refresh tokens may be
-held without rotation.
+held without rotation. [OAuth 2.1 Sec 4.3.1]
 
 Clients may wish to implement special handling for expiring refresh tokens. For example,
 if the user has granted expiring access, the client may notify the user that they will
@@ -140,11 +140,7 @@ If the user renews their consent, unexpired refresh tokens MUST become usable ag
 
 ===
 
-TODO: Which option?
-  1 is simpler and likely less error-prone.
-  2 is more flexible and allows for RTs that statelessly encode expiration time,
-    but seems like a recipe for serious vulnerabilities for AS that have buggy
-    consent checks.
+TODO: Which option? See "Security Considerations".
 
 # Token endpoint response
 
@@ -165,6 +161,7 @@ This specification introduces two new response parameters.
           refresh_token_expires_in.
 
 TODO: use RFC3339 durations?
+
 TODO: How to indicate "valid until revoked"? Omit field, couple with metadata? 0? -1?
 
 ## Error response
@@ -211,7 +208,22 @@ indicate to the client that it's aware of this spec.
 
 # Security Considerations
 
-TODO Security
+[OPTION 1]
+While it is possible to allow refresh token expiration to exceed
+that of user consent expiration if the authorization server checks both
+timestamps when validating a refresh token, this is a potentially dangerous
+source of bugs in systems with complicated user consent models. By requiring
+refresh tokens to expire no later than user consent expires, there is less risk
+of bugs that accidentally provide data access to the client beyond the term of
+the user's consent.
+
+[OPTION 2]
+While it would be less error-prone to require refresh tokens to expire no later
+than the user's consent, it may pose an issue for authorization servers that
+statelessly encode expiration time into the refresh token, as they'll have no
+way to extend the lifetime of these tokens if the user renews their consent. As
+long as authorization servers check both expiration timestamps when validating
+refresh tokens, it's safe to have longer refresh token expiration.
 
 
 # IANA Considerations
@@ -225,3 +237,4 @@ TODO
 {:numbered="false"}
 
 TODO acknowledge.
+
