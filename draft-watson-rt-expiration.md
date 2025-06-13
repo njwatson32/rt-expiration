@@ -50,7 +50,8 @@ author:
     organization: Google, LLC
     email: nwatson@google.com
 
-normative: RFC6749
+normative:
+ - RFC6749
 
 informative:
 
