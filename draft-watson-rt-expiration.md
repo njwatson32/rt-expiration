@@ -225,6 +225,8 @@ way to extend the lifetime of these tokens if the user renews their consent. As
 long as authorization servers check both expiration timestamps when validating
 refresh tokens, it's safe to have longer refresh token expiration.
 
+TODO
+
 
 # IANA Considerations
 
