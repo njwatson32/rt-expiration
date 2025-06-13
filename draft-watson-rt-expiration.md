@@ -9,20 +9,20 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: oauth
+# area: AREA
+# workgroup: oauth
 keyword:
  - oauth
  - refresh token
  - consent
  - token endpoint
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+#  group: WG
+#  type: Working Group
+#  mail: WG@example.com
+#  arch: https://example.com/WG
+  github: "njwatson32/rt-expiration"
+  latest: "https://njwatson32.github.io/rt-expiration/draft-watson-rt-expiration.html"
 
 author:
  -
