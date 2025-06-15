@@ -1,0 +1,71 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2025-06-15T01:06:36.810169+00:00",
+  "repo": "njwatson32/rt-expiration",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOOTpjy862Gb4-",
+      "title": "Test Issue",
+      "url": "https://github.com/njwatson32/rt-expiration/issues/1",
+      "state": "OPEN",
+      "author": "njwatson32",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-05-11T18:25:10Z",
+      "updatedAt": "2025-05-11T18:25:10Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": []
+}
