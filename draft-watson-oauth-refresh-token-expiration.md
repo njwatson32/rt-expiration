@@ -3,7 +3,7 @@ title: "OAuth 2.0 Refresh Token and Consent Expiration"
 abbrev: "OAuth RT/Consent Expiration"
 category: info
 
-docname: draft-watson-rt-expiration-latest
+docname: draft-watson-oauth-refresh-token-expiration-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
