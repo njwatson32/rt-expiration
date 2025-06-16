@@ -22,7 +22,7 @@ venue:
 #  mail: WG@example.com
 #  arch: https://example.com/WG
   github: "njwatson32/rt-expiration"
-  latest: "https://njwatson32.github.io/rt-expiration/draft-watson-rt-expiration.html"
+  latest: "https://njwatson32.github.io/rt-expiration/draft-watson-oauth-refresh-token-expiration.html"
 
 author:
  -
