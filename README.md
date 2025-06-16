@@ -4,10 +4,10 @@
 
 This is the working area for the individual Internet-Draft, "OAuth 2.0 Refresh Token and Consent Expiration".
 
-* [Editor's Copy](https://njwatson32.github.io/rt-expiration/#go.draft-watson-rt-expiration.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-watson-rt-expiration)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-watson-rt-expiration)
-* [Compare Editor's Copy to Individual Draft](https://njwatson32.github.io/rt-expiration/#go.draft-watson-rt-expiration.diff)
+* [Editor's Copy](https://njwatson32.github.io/rt-expiration/#go.draft-watson-oauth-refresh-token-expiration.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-watson-oauth-refresh-token-expiration)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-watson-oauth-refresh-token-expiration)
+* [Compare Editor's Copy to Individual Draft](https://njwatson32.github.io/rt-expiration/#go.draft-watson-oauth-refresh-token-expiration.diff)
 
 
 ## Contributing
