@@ -22,3 +22,4 @@ draft-watson-rt-expiration.xml
 package-lock.json
 report.xml
 !requirements.txt
+.DS_Store
