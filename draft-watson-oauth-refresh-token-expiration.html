@@ -8,7 +8,8 @@
 <meta content="Nicholas Watson" name="author">
 <meta content="
        This specification extends OAuth 2.0   by adding new token endpoint
-response parameters to specify refresh token expiration and user consent expiration. 
+response parameters to specify refresh token expiration and user consent
+expiration. 
     " name="description">
 <meta content="xml2rfc 3.28.1" name="generator">
 <meta content="oauth" name="keyword">
@@ -1052,7 +1053,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Watson</td>
-<td class="center">Expires 18 December 2025</td>
+<td class="center">Expires 19 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-watson-oauth-refresh-token-expiration-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-16" class="published">16 June 2025</time>
+<time datetime="2025-06-17" class="published">17 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-18">18 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-19">19 December 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1084,7 +1085,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification extends OAuth 2.0 <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> by adding new token endpoint
-response parameters to specify refresh token expiration and user consent expiration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+response parameters to specify refresh token expiration and user consent
+expiration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1116,7 +1118,7 @@ response parameters to specify refresh token expiration and user consent expirat
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1209,27 +1211,28 @@ response parameters to specify refresh token expiration and user consent expirat
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">RFC6749 defines the OAuth 2.0 protocol, part of which is the ability for a client to receive
-a refresh token that may be repeatedly exchanged for
-more access tokens. OAuth 2.0 does not contain any normative language around
+<p id="section-1-1">RFC6749 defines the OAuth 2.0 protocol, part of which is the ability for a
+client to receive a refresh token that may be repeatedly exchanged for more
+access tokens. OAuth 2.0 does not contain any normative language around
 expiration or lack thereof for refresh tokens, mentioning only that they are
 "typically long-lasting".<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">In the years since the publication of OAuth 2.0, in response to changing security
-and privacy landscapes, many authorization servers have
-begun to issue shorter-lived refresh tokens for two main reasons:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">In the years since the publication of OAuth 2.0, in response to changing
+security and privacy landscapes, many authorization servers have begun to issue
+shorter-lived refresh tokens for two main reasons:<a href="#section-1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-3.1">
-          <p id="section-1-3.1.1">The authorization server or user may decide that the access being granted is too
-sensitive to allow indefinite access (e.g. mail or health data).<a href="#section-1-3.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-3.1.1">The authorization server or user may decide that the access being granted is
+too sensitive to allow indefinite access (e.g. mail or health data).<a href="#section-1-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-3.2">
-          <p id="section-1-3.2.1">The authorization server enforces a maximum duration that refresh tokens may be
-held without rotation. [OAuth 2.1 Sec 4.3.1]<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-3.2.1">The authorization server enforces a maximum duration that refresh tokens may
+be held without rotation. [OAuth 2.1 Sec 4.3.1]<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-1-4">Clients may wish to implement special handling for expiring refresh tokens. For example,
-if the user has granted expiring access, the client may notify the user that they will
-need to reauthorize access before a certain date to avoid interruption of service.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-4">Clients may wish to implement special handling for expiring refresh tokens. For
+example, if the user has granted expiring access, the client may notify the user
+that they will need to reauthorize access before a certain date to avoid
+interruption of service.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="requirements-notation-and-conventions">
@@ -1251,8 +1254,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3-1">"Resource owner" and "user" are used interchangeably to refer to the entity
 capable of granting access to a protected resource.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">"Client", "application", and "relying party" are used interchangeably to refer
-to the application making protected resource requests on behalf of the
-resource owner and with its authorization.<a href="#section-3-2" class="pilcrow">¶</a></p>
+to the application making protected resource requests on behalf of the resource
+owner and with its authorization.<a href="#section-3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="concepts">
@@ -1291,22 +1294,13 @@ without having to accept old credentials forever.<a href="#section-4.2-1" class=
       <h2 id="name-refresh-token-expiration">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-refresh-token-expiration" class="section-name selfRef">Refresh token expiration</a>
       </h2>
-<p id="section-5-1">[OPTION 1]<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The refresh token <span class="bcp14">MUST</span> expire no later than the user consent
-expires. It <span class="bcp14">MAY</span> expire earlier if the authorization server also enforces a
-maximum duration between refresh token rotations.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">If the user renews their consent, the authorization server <span class="bcp14">SHOULD</span>
-update the expiration time of existing refresh tokens. The authorization server
-<span class="bcp14">MUST NOT</span> accept expired refresh tokens, even if it has no way to update the
-expiration time of existing refresh tokens.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">[OPTION 2]<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">The refresh token <span class="bcp14">SHOULD</span> expire no later than the user consent
-expires. It <span class="bcp14">MAY</span> expire earlier if the authorization server also enforces a
-maximum duration between refresh token rotations. Attempting to exchange a refresh
-token after user consent has expired <span class="bcp14">MUST</span> result in a failure.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">If the user renews their consent, unexpired refresh tokens <span class="bcp14">MUST</span> become usable again.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">===<a href="#section-5-7" class="pilcrow">¶</a></p>
-<p id="section-5-8">TODO: Which option? See "Security Considerations".<a href="#section-5-8" class="pilcrow">¶</a></p>
+<p id="section-5-1">The refresh token <span class="bcp14">MUST</span> expire no later than the user consent expires. It <span class="bcp14">MAY</span>
+expire earlier if the authorization server also enforces a maximum duration
+between refresh token rotations.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">If the user renews their consent, the authorization server <span class="bcp14">SHOULD</span> update the
+expiration time of existing refresh tokens. The authorization server <span class="bcp14">MUST NOT</span>
+accept expired refresh tokens, even if it has no way to update the expiration
+time of existing refresh tokens.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="token-endpoint-response">
@@ -1325,8 +1319,8 @@ token after user consent has expired <span class="bcp14">MUST</span> result in a
 refresh_token_expires_in
       The lifetime in seconds of the refresh token. For example, the value
       "604800" denotes that the refresh token will expire in one week from
-      the time the response was generated. [If option 1, this value SHALL
-      NOT exceed the value in consent_expires_in.]
+      the time the response was generated. This value SHALL NOT exceed the
+      value in consent_expires_in.
 
 consent_expires_in
       The lifetime in seconds of the user's consent. For example, the value
@@ -1335,8 +1329,15 @@ consent_expires_in
       refresh_token_expires_in.
 </pre><a href="#section-6.1-1" class="pilcrow">¶</a>
 </div>
-<p id="section-6.1-2">TODO: use RFC3339 durations?<a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.1-3">TODO: How to indicate "valid until revoked"? Omit field, couple with metadata? 0? -1?<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">Omitted values indicate that there is no fixed upper bound on the lifetime of
+the credential or consent. If the authorization server has not declared its
+support for refresh token lifetime in the Authorization Server Metadata,
+omitted response fields could indicate either indefinite validity or simply lack
+of support for this specification. However, infinite expiration and lack of
+information about expiration should be handled by the client in the same way.
+That is to say, the client must always handle refresh token invalidation not
+caused by expiration, such as by explicit user revocation.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">TODO: could use -1 for infinite expiration?<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="error-response">
@@ -1356,27 +1357,29 @@ a new authorization grant flow.<a href="#section-6.2-1" class="pilcrow">¶</a></
         </h3>
 <p id="section-6.3-1">Suppose an authorization server enforces that refresh tokens must be rotated at
 least once every 7 days, and a user has granted consent to an application for
-access for 30 days. Initially, all refresh tokens will be valid for 7 days. An
-exchange 7 days after initial authorization will result in the following
-response values:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+access for 30 days. The initial exchange will result in the following response
+values:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.3-2">
 <pre>
 refresh_token_expires_in: "604800"  // 7 days
-consent_expires_in: "1987200"  // 23 days
+consent_expires_in: "2592000"  // 30 days
 </pre><a href="#section-6.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-6.3-3">An exchange 28 days after initial authorization will result in the following
+<p id="section-6.3-3">An exchange 7 days after initial authorization will result in the following
 response values:<a href="#section-6.3-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.3-4">
 <pre>
-[OPTION 1]
+refresh_token_expires_in: "604800"  // 7 days
+consent_expires_in: "1987200"  // 23 days
+</pre><a href="#section-6.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-6.3-5">An exchange 28 days after initial authorization will result in the following
+response values:<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.3-6">
+<pre>
 refresh_token_expires_in: "172800"  // 2 days
 consent_expires_in: "172800"  // 2 days
-
-[OPTION 2]
-refresh_token_expires_in: "604800"  // 7 days
-consent_expires_in: "172800"  // 2 days
-</pre><a href="#section-6.3-4" class="pilcrow">¶</a>
+</pre><a href="#section-6.3-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1397,9 +1400,9 @@ refresh_token_expiration_types
     are "consent" and "credential".
 </pre><a href="#section-7-2" class="pilcrow">¶</a>
 </div>
-<p id="section-7-3">TODO: If absence of expiration_time in token endpoint response means that the RT is valid
-forever then the AS must declare refresh_token_expiration_types in metadata to
-indicate to the client that it's aware of this spec.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-3">If the authorization server omits expiration time response fields to indicate
+indefinite validity, it <span class="bcp14">MUST</span> declare refresh_token_expiration_types in metadata
+to indicate to the client that it's aware of this spec.<a href="#section-7-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -1407,21 +1410,13 @@ indicate to the client that it's aware of this spec.<a href="#section-7-3" class
       <h2 id="name-security-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">[OPTION 1]
-While it is possible to allow refresh token expiration to exceed
+<p id="section-8-1">While it is possible to allow refresh token expiration to exceed
 that of user consent expiration if the authorization server checks both
 timestamps when validating a refresh token, this is a potentially dangerous
 source of bugs in systems with complicated user consent models. By requiring
 refresh tokens to expire no later than user consent expires, there is less risk
 of bugs that accidentally provide data access to the client beyond the term of
 the user's consent.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">[OPTION 2]
-While it would be less error-prone to require refresh tokens to expire no later
-than the user's consent, it may pose an issue for authorization servers that
-statelessly encode expiration time into the refresh token, as they'll have no
-way to extend the lifetime of these tokens if the user renews their consent. As
-long as authorization servers check both expiration timestamps when validating
-refresh tokens, it's safe to have longer refresh token expiration.<a href="#section-8-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
