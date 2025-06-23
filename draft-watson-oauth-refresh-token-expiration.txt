@@ -4,8 +4,8 @@
 
 Network Working Group                                          N. Watson
 Internet-Draft                                               Google, LLC
-Intended status: Informational                              17 June 2025
-Expires: 19 December 2025
+Intended status: Informational                              23 June 2025
+Expires: 25 December 2025
 
 
              OAuth 2.0 Refresh Token and Consent Expiration
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 December 2025.
+   This Internet-Draft will expire on 25 December 2025.
 
 Copyright Notice
 
@@ -72,11 +72,16 @@ Table of Contents
    5.  Refresh token expiration
    6.  Token endpoint response
      6.1.  Successful response
+       6.1.1.  Infinite Expiration
      6.2.  Error response
      6.3.  Example
    7.  Update to Authorization Server Metadata
    8.  Security Considerations
    9.  IANA Considerations
+     9.1.  OAuth Token Response Parameters Registration
+       9.1.1.  Registry Contents
+     9.2.  OAuth Authorization Server Metadata
+       9.2.1.  Registry Contents
    10. Normative References
    Acknowledgments
    Author's Address
@@ -116,12 +121,12 @@ Table of Contents
 
 3.  Terminology
 
-   "Resource owner" and "user" are used interchangeably to refer to the
-   entity capable of granting access to a protected resource.
+   "Resource owner" and "user" may be used interchangeably to refer to
+   the entity capable of granting access to a protected resource.
 
-   "Client", "application", and "relying party" are used interchangeably
-   to refer to the application making protected resource requests on
-   behalf of the resource owner and with its authorization.
+   "Client", "application", and "relying party" may be used
+   interchangeably to refer to the application making protected resource
+   requests on behalf of the resource owner and with its authorization.
 
 4.  Concepts
 
@@ -150,11 +155,11 @@ Table of Contents
    It MAY expire earlier if the authorization server also enforces a
    maximum duration between refresh token rotations.
 
-   If the user renews their consent, the authorization server SHOULD
-   update the expiration time of existing refresh tokens.  The
-   authorization server MUST NOT accept expired refresh tokens, even if
-   it has no way to update the expiration time of existing refresh
-   tokens.
+   If the user renews their consent, the authorization server MAY update
+   the expiration time of existing refresh tokens if their lifetime was
+   truncated due to user consent expiration.  The authorization server
+   MUST NOT accept expired refresh tokens for any purpose, even if it
+   has no way to update the expiration time of existing refresh tokens.
 
 6.  Token endpoint response
 
@@ -174,6 +179,8 @@ consent_expires_in
       time the response was generated. This value MAY exceed that of
       refresh_token_expires_in.
 
+6.1.1.  Infinite Expiration
+
    Omitted values indicate that there is no fixed upper bound on the
    lifetime of the credential or consent.  If the authorization server
    has not declared its support for refresh token lifetime in the
@@ -185,7 +192,12 @@ consent_expires_in
    invalidation not caused by expiration, such as by explicit user
    revocation.
 
-   TODO: could use -1 for infinite expiration?
+   Rather than omitting a response value, an authorization server may
+   choose to return a large arbitrary value, e.g. "315569520" for 10
+   years.  This avoids any ambiguity around support for infinite values
+   while achieving a similar practical effect.  Clients MUST treat all
+   large values as literals and MUST NOT make any assumptions about
+   which may be considered infinite.
 
 6.2.  Error response
 
@@ -227,8 +239,8 @@ refresh_token_expiration_types
 
    If the authorization server omits expiration time response fields to
    indicate indefinite validity, it MUST declare
-   refresh_token_expiration_types in metadata to indicate to the client
-   that it's aware of this spec.
+   refresh_token_expiration_types in its metadata to indicate to the
+   client that it's aware of this spec.
 
 8.  Security Considerations
 
@@ -242,7 +254,45 @@ refresh_token_expiration_types
 
 9.  IANA Considerations
 
-   TODO
+9.1.  OAuth Token Response Parameters Registration
+
+   This specification registers the following OAuth parameter
+   definitions in the IANA OAuth Parameters registry.
+
+9.1.1.  Registry Contents
+
+   *  Name: refresh_token_expires_in
+
+      -  Parameter Usage Location: token response
+
+      -  Change Controller: IETF
+
+      -  Reference: This document
+
+   *  Name: consent_expires_in
+
+      -  Parameter Usage Location: token response
+
+      -  Change Controller: IETF
+
+      -  Reference: This document
+
+9.2.  OAuth Authorization Server Metadata
+
+   This specification registers the following Authorization Server
+   Metadata definitions in the IANA OAuth Authorization Server Metadata
+   registry.
+
+9.2.1.  Registry Contents
+
+   *  Metadata Name: refresh_token_expiration_types
+
+      -  Metadata Description: What types of refresh token expiration
+         are supported by the authorization server
+
+      -  Change Controller: IETF
+
+      -  Reference: This document
 
 10.  Normative References
 
@@ -258,6 +308,11 @@ refresh_token_expiration_types
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, "OAuth 2.0
+              Authorization Server Metadata", RFC 8414,
+              DOI 10.17487/RFC8414, June 2018,
+              <https://www.rfc-editor.org/rfc/rfc8414>.
 
 Acknowledgments
 
