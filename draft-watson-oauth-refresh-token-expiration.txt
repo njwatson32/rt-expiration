@@ -2,7 +2,7 @@
 
 
 
-Network Working Group                                          N. Watson
+Web Authorization Protocol                                     N. Watson
 Internet-Draft                                               Google, LLC
 Intended status: Informational                              23 June 2025
 Expires: 25 December 2025
@@ -26,6 +26,11 @@ About This Document
    refresh-token-expiration.html.  Status information for this document
    may be found at https://datatracker.ietf.org/doc/draft-watson-oauth-
    refresh-token-expiration/.
+
+   Discussion of this document takes place on the Web Authorization
+   Protocol Working Group mailing list (mailto:oauth@ietf.org), which is
+   archived at https://mailarchive.ietf.org/arch/browse/oauth/.
+   Subscribe at https://www.ietf.org/mailman/listinfo/oauth/.
 
    Source for this draft and an issue tracker can be found at
    https://github.com/njwatson32/rt-expiration.
@@ -78,9 +83,9 @@ Table of Contents
    7.  Update to Authorization Server Metadata
    8.  Security Considerations
    9.  IANA Considerations
-     9.1.  OAuth Token Response Parameters Registration
+     9.1.  OAuth Parameters Registration
        9.1.1.  Registry Contents
-     9.2.  OAuth Authorization Server Metadata
+     9.2.  OAuth Authorization Server Metadata Registration
        9.2.1.  Registry Contents
    10. Normative References
    Acknowledgments
@@ -254,7 +259,7 @@ refresh_token_expiration_types
 
 9.  IANA Considerations
 
-9.1.  OAuth Token Response Parameters Registration
+9.1.  OAuth Parameters Registration
 
    This specification registers the following OAuth parameter
    definitions in the IANA OAuth Parameters registry.
@@ -277,7 +282,7 @@ refresh_token_expiration_types
 
       -  Reference: This document
 
-9.2.  OAuth Authorization Server Metadata
+9.2.  OAuth Authorization Server Metadata Registration
 
    This specification registers the following Authorization Server
    Metadata definitions in the IANA OAuth Authorization Server Metadata
