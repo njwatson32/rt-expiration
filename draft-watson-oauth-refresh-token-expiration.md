@@ -32,6 +32,7 @@ author:
 
 normative:
   RFC6749:
+  RFC8414:
 
 informative:
 
@@ -72,12 +73,12 @@ interruption of service.
 
 # Terminology
 
-"Resource owner" and "user" are used interchangeably to refer to the entity
+"Resource owner" and "user" may be used interchangeably to refer to the entity
 capable of granting access to a protected resource.
 
-"Client", "application", and "relying party" are used interchangeably to refer
-to the application making protected resource requests on behalf of the resource
-owner and with its authorization.
+"Client", "application", and "relying party" may be used interchangeably to
+refer to the application making protected resource requests on behalf of the
+resource owner and with its authorization.
 
 # Concepts
 
@@ -104,9 +105,10 @@ The refresh token MUST expire no later than the user consent expires. It MAY
 expire earlier if the authorization server also enforces a maximum duration
 between refresh token rotations.
 
-If the user renews their consent, the authorization server SHOULD update the
-expiration time of existing refresh tokens. The authorization server MUST NOT
-accept expired refresh tokens, even if it has no way to update the expiration
+If the user renews their consent, the authorization server MAY update the
+expiration time of existing refresh tokens if their lifetime was truncated due
+to user consent expiration. The authorization server MUST NOT accept expired
+refresh tokens for any purpose, even if it has no way to update the expiration
 time of existing refresh tokens.
 
 # Token endpoint response
@@ -127,6 +129,8 @@ This specification introduces two new response parameters.
           time the response was generated. This value MAY exceed that of
           refresh_token_expires_in.
 
+### Infinite Expiration
+
 Omitted values indicate that there is no fixed upper bound on the lifetime of
 the credential or consent. If the authorization server has not declared its
 support for refresh token lifetime in the Authorization Server Metadata,
@@ -136,7 +140,11 @@ information about expiration should be handled by the client in the same way.
 That is to say, the client must always handle refresh token invalidation not
 caused by expiration, such as by explicit user revocation.
 
-TODO: could use -1 for infinite expiration?
+Rather than omitting a response value, an authorization server may choose to
+return a large arbitrary value, e.g. "315569520" for 10 years. This avoids any
+ambiguity around support for infinite values while achieving a similar practical
+effect. Clients MUST treat all large values as literals and MUST NOT make any
+assumptions about which may be considered infinite.
 
 ## Error response
 
@@ -177,8 +185,8 @@ metadata:
         are "consent" and "credential".
 
 If the authorization server omits expiration time response fields to indicate
-indefinite validity, it MUST declare refresh_token_expiration_types in metadata
-to indicate to the client that it's aware of this spec.
+indefinite validity, it MUST declare refresh_token_expiration_types in its
+metadata to indicate to the client that it's aware of this spec.
 
 # Security Considerations
 
@@ -192,8 +200,34 @@ the user's consent.
 
 # IANA Considerations
 
-TODO
+## OAuth Token Response Parameters Registration
 
+This specification registers the following OAuth parameter definitions in the
+IANA OAuth Parameters registry.
+
+### Registry Contents
+
+*   Name: refresh_token_expires_in
+    *   Parameter Usage Location: token response
+    *   Change Controller: IETF
+    *   Reference: This document
+*   Name: consent_expires_in
+    *   Parameter Usage Location: token response
+    *   Change Controller: IETF
+    *   Reference: This document
+
+## OAuth Authorization Server Metadata
+
+This specification registers the following Authorization Server Metadata
+definitions in the IANA OAuth Authorization Server Metadata registry.
+
+### Registry Contents
+
+*   Metadata Name: refresh_token_expiration_types
+    *   Metadata Description: What types of refresh token expiration are
+        supported by the authorization server
+    *   Change Controller: IETF
+    *   Reference: This document
 
 --- back
 
@@ -201,4 +235,5 @@ TODO
 {:numbered="false"}
 
 TODO acknowledge.
+
 
