@@ -9,18 +9,18 @@ number:
 date:
 consensus: true
 v: 3
-# area: AREA
-# workgroup: oauth
+area: "Security"
+workgroup: "Web Authorization Protocol"
 keyword:
  - oauth
  - refresh token
  - consent
  - token endpoint
 venue:
-#  group: WG
-#  type: Working Group
-#  mail: WG@example.com
-#  arch: https://example.com/WG
+  group: "Web Authorization Protocol"
+  type: "Working Group"
+  mail: "oauth@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
   github: "njwatson32/rt-expiration"
   latest: "https://njwatson32.github.io/rt-expiration/draft-watson-oauth-refresh-token-expiration.html"
 
@@ -200,7 +200,7 @@ the user's consent.
 
 # IANA Considerations
 
-## OAuth Token Response Parameters Registration
+## OAuth Parameters Registration
 
 This specification registers the following OAuth parameter definitions in the
 IANA OAuth Parameters registry.
@@ -216,7 +216,7 @@ IANA OAuth Parameters registry.
     *   Change Controller: IETF
     *   Reference: This document
 
-## OAuth Authorization Server Metadata
+## OAuth Authorization Server Metadata Registration
 
 This specification registers the following Authorization Server Metadata
 definitions in the IANA OAuth Authorization Server Metadata registry.
