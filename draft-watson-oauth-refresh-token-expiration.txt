@@ -4,8 +4,8 @@
 
 Web Authorization Protocol                                     N. Watson
 Internet-Draft                                               Google, LLC
-Intended status: Informational                              23 June 2025
-Expires: 25 December 2025
+Intended status: Informational                              27 June 2025
+Expires: 29 December 2025
 
 
              OAuth 2.0 Refresh Token and Consent Expiration
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2025.
+   This Internet-Draft will expire on 29 December 2025.
 
 Copyright Notice
 
@@ -82,12 +82,13 @@ Table of Contents
      6.3.  Example
    7.  Update to Authorization Server Metadata
    8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  OAuth Parameters Registration
-       9.1.1.  Registry Contents
-     9.2.  OAuth Authorization Server Metadata Registration
-       9.2.1.  Registry Contents
-   10. Normative References
+   9.  Privacy Considerations
+   10. IANA Considerations
+     10.1.  OAuth Parameters Registration
+       10.1.1.  Registry Contents
+     10.2.  OAuth Authorization Server Metadata Registration
+       10.2.1.  Registry Contents
+   11. Normative References
    Acknowledgments
    Author's Address
 
@@ -257,14 +258,23 @@ refresh_token_expiration_types
    consent expires, there is less risk of bugs that accidentally provide
    data access to the client beyond the term of the user's consent.
 
-9.  IANA Considerations
+9.  Privacy Considerations
 
-9.1.  OAuth Parameters Registration
+   Allowing users to time-limit their consent is a privacy improvement.
+   While this was already doable in regular OAuth implementations, the
+   potential interruption of service for the user may have discouraged
+   implementation of the feature.  This specification provides a
+   standardized way to mitigate that concern and should lead to greater
+   adoption of time-limited consent.
+
+10.  IANA Considerations
+
+10.1.  OAuth Parameters Registration
 
    This specification registers the following OAuth parameter
    definitions in the IANA OAuth Parameters registry.
 
-9.1.1.  Registry Contents
+10.1.1.  Registry Contents
 
    *  Name: refresh_token_expires_in
 
@@ -282,13 +292,13 @@ refresh_token_expiration_types
 
       -  Reference: This document
 
-9.2.  OAuth Authorization Server Metadata Registration
+10.2.  OAuth Authorization Server Metadata Registration
 
    This specification registers the following Authorization Server
    Metadata definitions in the IANA OAuth Authorization Server Metadata
    registry.
 
-9.2.1.  Registry Contents
+10.2.1.  Registry Contents
 
    *  Metadata Name: refresh_token_expiration_types
 
@@ -299,7 +309,7 @@ refresh_token_expiration_types
 
       -  Reference: This document
 
-10.  Normative References
+11.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
