@@ -148,9 +148,9 @@ assumptions about which may be considered infinite.
 
 ## Error response
 
-The existing invalid_grant error code already explicitly covers token expiration
-and should be sufficient. Upon receiving this error code the client SHOULD start
-a new authorization grant flow.
+The existing `invalid_grant` error code already explicitly covers token
+expiration and should be sufficient. Upon receiving this error code the client
+SHOULD start a new authorization grant flow.
 
 ## Example
 
@@ -185,7 +185,7 @@ metadata:
         are "consent" and "credential".
 
 If the authorization server omits expiration time response fields to indicate
-indefinite validity, it MUST declare refresh_token_expiration_types in its
+indefinite validity, it MUST declare `refresh_token_expiration_types` in its
 metadata to indicate to the client that it's aware of this spec.
 
 # Security Considerations
@@ -197,6 +197,14 @@ source of bugs in systems with complicated user consent models. By requiring
 refresh tokens to expire no later than user consent expires, there is less risk
 of bugs that accidentally provide data access to the client beyond the term of
 the user's consent.
+
+# Privacy Considerations
+
+Allowing users to time-limit their consent is a privacy improvement. While this
+was already doable in regular OAuth implementations, the potential interruption
+of service for the user may have discouraged implementation of the feature. This
+specification provides a standardized way to mitigate that concern and should
+lead to greater adoption of time-limited consent.
 
 # IANA Considerations
 
@@ -235,5 +243,3 @@ definitions in the IANA OAuth Authorization Server Metadata registry.
 {:numbered="false"}
 
 TODO acknowledge.
-
-
