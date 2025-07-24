@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-22T01:03:56.370020+00:00",
+  "timestamp": "2025-07-24T01:04:06.404954+00:00",
   "repo": "njwatson32/rt-expiration",
   "labels": [
     {
@@ -65,6 +65,51 @@
       "updatedAt": "2025-05-11T18:25:10Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOOTpjy87CDi_S",
+      "title": "Necessity of this draft",
+      "url": "https://github.com/njwatson32/rt-expiration/issues/2",
+      "state": "CLOSED",
+      "author": "yaron-zehavi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Dear Nick,\nI think the proposed parameters `refresh_token_expires_in`, `consent_expires_in` makes explicit what today works well, although implicitly.\n\n- `refresh_token_expires_in`: Currently token endpoint responds with `expires_in` which refers to the `access_token`, and the assumption is that when expiration time is reached, client shall use the optional `refresh_token` to renew. So there's an implicit assumption that the TTL of `refresh_token` is longer than that of the `access_token`. That's a pretty strong assumption because if the refresh token has same or shorter TTL as the access token, it's rendered useless.\n- `consent_expires_in`: Clients refresh consents as long as they are successful in doing so. The RFC6749 error `invalid_grant` is intended, among others, for expired consents: \"The provided authorization grant (e.g., authorization code, resource owner credentials) or **refresh token** is invalid, **expired**, revoked\"\n",
+      "createdAt": "2025-07-23T09:54:22Z",
+      "updatedAt": "2025-07-23T17:27:03Z",
+      "closedAt": "2025-07-23T17:27:03Z",
+      "comments": [
+        {
+          "author": "njwatson32",
+          "authorAssociation": "OWNER",
+          "body": "- `refresh_token_expires_in`: There are lots of clients that use their access infrequently, and may only refresh the token when needed. `lifetime(RT) >= lifetime(AT)` is indeed obvious, but that's insufficient information for clients that, say, only use their RT when the user is using the app.\n- `consent_expires_in`: This one is needed for the reasons mentioned in the draft. Users can extend consent out of band to avoid an interruption in service. Waiting for expiration first is a very bad experience. Google has had several large clients ask us to return this information.",
+          "createdAt": "2025-07-23T10:59:18Z",
+          "updatedAt": "2025-07-23T10:59:18Z"
+        },
+        {
+          "author": "yaron-zehavi",
+          "authorAssociation": "NONE",
+          "body": "hmmm good points.\n1. I think it could be argued that clients that only use their RT when the user is present, are liable to also ignore `refresh_token_expires_in`. And more diligent clients that renew access no matter what, do so on the TTL of AT)\n2. What's the value of `consent_expires_in` when it's lifetime is subject to shortening or extension out of band? Assuming the consent_expires_in valeu doesn't change, what would client do with this information?",
+          "createdAt": "2025-07-23T15:05:15Z",
+          "updatedAt": "2025-07-23T15:05:15Z"
+        },
+        {
+          "author": "njwatson32",
+          "authorAssociation": "OWNER",
+          "body": "1. I don't think this follows. I would think the opposite, in fact. Clients that only use the RT rarely would now know that they need to use it at a particular cadence. If they don't bother to implement anything, that's their call, but we need to at least give them the info to make that choice. Otherwise they're likely to either assume the RT lasts forever, potentially resulting in a bad experience, or refresh every hour even if unneeded, which is wasteful.\n2. The value can change. I can't think of a case when it would be shortened, as users would be likely to just revoke rather than shorten. Lengthening is useful to communicate to the client. If clients with \"offline\" use cases (e.g. email monitoring) detect that the duration is coming to an end, they want to proactively remind the user to extend consent.",
+          "createdAt": "2025-07-23T16:49:36Z",
+          "updatedAt": "2025-07-23T16:49:36Z"
+        },
+        {
+          "author": "yaron-zehavi",
+          "authorAssociation": "NONE",
+          "body": "Thanks,\nI see your point on #1 and agree.\nAs for #2 maybe `consent_expires_in` should be returned also on subsequent calls to token endpoint with refresh token, allowing client to learn if consent has been prolonged.",
+          "createdAt": "2025-07-23T17:26:56Z",
+          "updatedAt": "2025-07-23T17:26:56Z"
+        }
+      ]
     }
   ],
   "pulls": []
