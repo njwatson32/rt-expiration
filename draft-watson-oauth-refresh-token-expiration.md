@@ -60,7 +60,7 @@ shorter-lived refresh tokens for two main reasons:
 *   The authorization server or user may decide that the access being granted is
     too sensitive to allow indefinite access (e.g. mail or health data).
 *   The authorization server enforces a maximum duration that refresh tokens may
-    be held without rotation. [OAuth 2.1 Sec 4.3.1]
+    be held without rotation. [Section 4.3.1 of OAuth 2.1]
 
 Clients may wish to implement special handling for expiring refresh tokens. For
 example, if the user has granted expiring access, the client may notify the user
