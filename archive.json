@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-24T01:04:06.404954+00:00",
+  "timestamp": "2025-07-27T01:10:17.208167+00:00",
   "repo": "njwatson32/rt-expiration",
   "labels": [
     {
@@ -112,5 +112,32 @@
       ]
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 3,
+      "id": "PR_kwDOOTpjy86gkDMZ",
+      "title": "fix section reference",
+      "url": "https://github.com/njwatson32/rt-expiration/pull/3",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-25T04:05:26Z",
+      "updatedAt": "2025-07-25T04:05:26Z",
+      "baseRepository": "njwatson32/rt-expiration",
+      "baseRefName": "main",
+      "baseRefOid": "ef58e6762bb31088ba5b986dcc2cb1347b2719b7",
+      "headRepository": "njwatson32/rt-expiration",
+      "headRefName": "aaronpk-patch-1",
+      "headRefOid": "427c784b4a77ff705aebb844e9bd3c80e85a3c3e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
