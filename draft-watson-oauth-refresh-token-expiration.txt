@@ -4,18 +4,18 @@
 
 Web Authorization Protocol                                     N. Watson
 Internet-Draft                                               Google, LLC
-Intended status: Informational                              27 June 2025
-Expires: 29 December 2025
+Intended status: Informational                            15 August 2025
+Expires: 16 February 2026
 
 
-             OAuth 2.0 Refresh Token and Consent Expiration
+          OAuth 2.0 Refresh Token and Authorization Expiration
            draft-watson-oauth-refresh-token-expiration-latest
 
 Abstract
 
    This specification extends OAuth 2.0 [RFC6749] by adding new token
    endpoint response parameters to specify refresh token expiration and
-   user consent expiration.
+   user authorization expiration.
 
 About This Document
 
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 December 2025.
+   This Internet-Draft will expire on 16 February 2026.
 
 Copyright Notice
 
@@ -72,8 +72,8 @@ Table of Contents
    2.  Requirements Notation and Conventions
    3.  Terminology
    4.  Concepts
-     4.1.  Consent expiration
-     4.2.  Refresh token rotation
+     4.1.  Authorization expiration
+     4.2.  Refresh token timeout
    5.  Refresh token expiration
    6.  Token endpoint response
      6.1.  Successful response
@@ -81,14 +81,15 @@ Table of Contents
      6.2.  Error response
      6.3.  Example
    7.  Update to Authorization Server Metadata
-   8.  Security Considerations
-   9.  Privacy Considerations
-   10. IANA Considerations
-     10.1.  OAuth Parameters Registration
-       10.1.1.  Registry Contents
-     10.2.  OAuth Authorization Server Metadata Registration
-       10.2.1.  Registry Contents
-   11. Normative References
+   8.  User Experience Considerations
+   9.  Security Considerations
+   10. Privacy Considerations
+   11. IANA Considerations
+     11.1.  OAuth Parameters Registration
+       11.1.1.  Registry Contents
+     11.2.  OAuth Authorization Server Metadata Registration
+       11.2.1.  Registry Contents
+   12. Normative References
    Acknowledgments
    Author's Address
 
@@ -110,7 +111,7 @@ Table of Contents
       health data).
 
    *  The authorization server enforces a maximum duration that refresh
-      tokens may be held without rotation.  [OAuth 2.1 Sec 4.3.1]
+      tokens may be held without being exchanged on the token endpoint.
 
    Clients may wish to implement special handling for expiring refresh
    tokens.  For example, if the user has granted expiring access, the
@@ -138,34 +139,42 @@ Table of Contents
 
    There are two mechanisms that can affect refresh token expiration.
 
-4.1.  Consent expiration
+4.1.  Authorization expiration
 
-   When granting consent for an application to access their data, the
-   user may opt to time-limit that consent, especially if the data is
-   sensitive or they aren't sure how long they'll continue using the
-   application.  The authorization server itself may also impose
-   mandatory limits on consent duration.
+   When granting authorization for an application to access their data
+   as referenced in [RFC6749] Sec 4.1.1, the user may opt to time-limit
+   that authorization, especially if the data is sensitive or they
+   aren't sure how long they'll continue using the application.  The
+   authorization server itself may also impose mandatory limits on
+   authorization duration.
 
-4.2.  Refresh token rotation
+4.2.  Refresh token timeout
 
-   Authorization servers implementing refresh token rotation may wish to
-   define a maximum amount of time clients can hold a refresh token
-   without rotating it.  Beyond the security benefit provided by
-   expiring credentials, this also provides a convenient mechanism for
-   authorization servers to change refresh token keys without having to
-   accept old credentials forever.
+   Authorization servers may wish to define a maximum amount of time
+   clients can hold a refresh token without exchanging it.  Beyond the
+   security benefit provided by expiring credentials, this also provides
+   a convenient mechanism for authorization servers to change refresh
+   token keys without having to accept old credentials forever.
 
 5.  Refresh token expiration
 
-   The refresh token MUST expire no later than the user consent expires.
-   It MAY expire earlier if the authorization server also enforces a
-   maximum duration between refresh token rotations.
+   The refresh token MUST NOT expire later than the user authorization
+   expires.  It MAY expire earlier if the authorization server also
+   enforces a maximum duration between refresh token exchanges.
 
-   If the user renews their consent, the authorization server MAY update
-   the expiration time of existing refresh tokens if their lifetime was
-   truncated due to user consent expiration.  The authorization server
-   MUST NOT accept expired refresh tokens for any purpose, even if it
-   has no way to update the expiration time of existing refresh tokens.
+   If the user renews their authorization, the authorization server
+   SHOULD update the expiration time of existing refresh tokens if their
+   lifetime was truncated due to user authorization expiration.  The
+   authorization server MUST NOT accept expired refresh tokens for any
+   purpose, even if it has no way to update the expiration time of
+   existing refresh tokens.
+
+   Access tokens MUST NOT expire later than the user authorization
+   expires.  If the user renews their authorization, the authorization
+   server MAY update the expiration time of existing access tokens if
+   possible.  Resource servers MUST NOT accept expired access tokens for
+   any purpose, even if the authorization server has no way to update
+   the expiration time of existing access tokens.
 
 6.  Token endpoint response
 
@@ -175,21 +184,36 @@ Table of Contents
 
 refresh_token_expires_in
       The lifetime in seconds of the refresh token. For example, the value
-      "604800" denotes that the refresh token will expire in one week from
-      the time the response was generated. This value SHALL NOT exceed the
-      value in consent_expires_in.
+      604800 denotes that the refresh token will expire in one week from the
+      time the response was generated. This value SHALL NOT exceed the value
+      in authorization_expires_in.
 
-consent_expires_in
-      The lifetime in seconds of the user's consent. For example, the value
-      "2629800" denotes that the consent will expire in one month from the
-      time the response was generated. This value MAY exceed that of
-      refresh_token_expires_in.
+authorization_expires_in
+      The lifetime in seconds of the user's authorization. For example, the
+      value 2629800 denotes that the authorization will expire in one month
+      from the time the response was generated. This value MAY exceed that
+      of refresh_token_expires_in.
+
+   If finite, the authorization server MUST return these values whenever
+   the token endpoint response contains the refresh_token field.  The
+   authorization server MAY return these values even if the response
+   contains no refresh_token field in the response, which can be useful
+   in the following example cases:
+
+   *  For refresh_token_expires_in, the authorization server could have
+      updated the existing refresh token lifetime in place.
+
+   *  For authorization_expires_in, the user's authorization lifetime
+      could have been modified out of band.
+
+   *  In either case, it can be convenient for the client to receive
+      these values in all responses.
 
 6.1.1.  Infinite Expiration
 
    Omitted values indicate that there is no fixed upper bound on the
-   lifetime of the credential or consent.  If the authorization server
-   has not declared its support for refresh token lifetime in the
+   lifetime of the credential or authorization.  If the authorization
+   server has not declared its support for refresh token lifetime in the
    Authorization Server Metadata, omitted response fields could indicate
    either indefinite validity or simply lack of support for this
    specification.  However, infinite expiration and lack of information
@@ -199,7 +223,7 @@ consent_expires_in
    revocation.
 
    Rather than omitting a response value, an authorization server may
-   choose to return a large arbitrary value, e.g. "315569520" for 10
+   choose to return a large arbitrary value, e.g. 315569520 for 10
    years.  This avoids any ambiguity around support for infinite values
    while achieving a similar practical effect.  Clients MUST treat all
    large values as literals and MUST NOT make any assumptions about
@@ -214,24 +238,24 @@ consent_expires_in
 6.3.  Example
 
    Suppose an authorization server enforces that refresh tokens must be
-   rotated at least once every 7 days, and a user has granted consent to
-   an application for access for 30 days.  The initial exchange will
-   result in the following response values:
+   exchanged at least once every 7 days, and a user has granted
+   authorization to an application for access for 30 days.  The initial
+   exchange will result in the following response values:
 
-   refresh_token_expires_in: "604800"  // 7 days
-   consent_expires_in: "2592000"  // 30 days
+   refresh_token_expires_in: 604800  // 7 days
+   authorization_expires_in: 2592000  // 30 days
 
    An exchange 7 days after initial authorization will result in the
    following response values:
 
-   refresh_token_expires_in: "604800"  // 7 days
-   consent_expires_in: "1987200"  // 23 days
+   refresh_token_expires_in: 604800  // 7 days
+   authorization_expires_in: 1987200  // 23 days
 
    An exchange 28 days after initial authorization will result in the
    following response values:
 
-   refresh_token_expires_in: "172800"  // 2 days
-   consent_expires_in: "172800"  // 2 days
+   refresh_token_expires_in: 172800  // 2 days
+   authorization_expires_in: 172800  // 2 days
 
 7.  Update to Authorization Server Metadata
 
@@ -239,42 +263,49 @@ consent_expires_in
    OAuth 2.0 Authorization Server Metadata [RFC8414] with the following
    metadata:
 
-refresh_token_expiration_types
+refresh_token_expiration_types_supported
     OPTIONAL. JSON array of supported expiration types. The possible values
-    are "consent" and "credential".
+    are "authorization" and "credential".
 
    If the authorization server omits expiration time response fields to
    indicate indefinite validity, it MUST declare
-   refresh_token_expiration_types in its metadata to indicate to the
-   client that it's aware of this spec.
+   refresh_token_expiration_types_supported in its metadata to indicate
+   to the client that it's aware of this spec.
 
-8.  Security Considerations
+8.  User Experience Considerations
+
+   TODO
+
+9.  Security Considerations
 
    While it is possible to allow refresh token expiration to exceed that
-   of user consent expiration if the authorization server checks both
-   timestamps when validating a refresh token, this is a potentially
-   dangerous source of bugs in systems with complicated user consent
-   models.  By requiring refresh tokens to expire no later than user
-   consent expires, there is less risk of bugs that accidentally provide
-   data access to the client beyond the term of the user's consent.
+   of user authorization expiration if the authorization server checks
+   both timestamps when validating a refresh token, this is a
+   potentially dangerous source of bugs in systems with complicated user
+   authorization models.  By requiring refresh tokens to expire no later
+   than user authorization expires, there is less risk of bugs that
+   accidentally provide data access to the client beyond the term of the
+   user's authorization.
 
-9.  Privacy Considerations
+   TODO: Discuss relation to token rotation [OAuth 2.1 Sec 4.3.1]
 
-   Allowing users to time-limit their consent is a privacy improvement.
-   While this was already doable in regular OAuth implementations, the
-   potential interruption of service for the user may have discouraged
-   implementation of the feature.  This specification provides a
-   standardized way to mitigate that concern and should lead to greater
-   adoption of time-limited consent.
+10.  Privacy Considerations
 
-10.  IANA Considerations
+   Allowing users to time-limit their authorization is a privacy
+   improvement.  While this was already doable in regular OAuth
+   implementations, the potential interruption of service for the user
+   may have discouraged implementation of the feature.  This
+   specification provides a standardized way to mitigate that concern
+   and should lead to greater adoption of time-limited authorization.
 
-10.1.  OAuth Parameters Registration
+11.  IANA Considerations
+
+11.1.  OAuth Parameters Registration
 
    This specification registers the following OAuth parameter
    definitions in the IANA OAuth Parameters registry.
 
-10.1.1.  Registry Contents
+11.1.1.  Registry Contents
 
    *  Name: refresh_token_expires_in
 
@@ -284,7 +315,7 @@ refresh_token_expiration_types
 
       -  Reference: This document
 
-   *  Name: consent_expires_in
+   *  Name: authorization_expires_in
 
       -  Parameter Usage Location: token response
 
@@ -292,13 +323,13 @@ refresh_token_expiration_types
 
       -  Reference: This document
 
-10.2.  OAuth Authorization Server Metadata Registration
+11.2.  OAuth Authorization Server Metadata Registration
 
    This specification registers the following Authorization Server
    Metadata definitions in the IANA OAuth Authorization Server Metadata
    registry.
 
-10.2.1.  Registry Contents
+11.2.1.  Registry Contents
 
    *  Metadata Name: refresh_token_expiration_types
 
@@ -309,7 +340,7 @@ refresh_token_expiration_types
 
       -  Reference: This document
 
-11.  Normative References
+12.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,

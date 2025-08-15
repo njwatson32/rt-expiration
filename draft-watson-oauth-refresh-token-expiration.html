@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>OAuth 2.0 Refresh Token and Consent Expiration</title>
+<title>OAuth 2.0 Refresh Token and Authorization Expiration</title>
 <meta content="Nicholas Watson" name="author">
 <meta content="
        This specification extends OAuth 2.0   by adding new token endpoint
-response parameters to specify refresh token expiration and user consent
+response parameters to specify refresh token expiration and user authorization
 expiration. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.30.0" name="generator">
 <meta content="oauth" name="keyword">
 <meta content="refresh token" name="keyword">
-<meta content="consent" name="keyword">
+<meta content="authorization" name="keyword">
 <meta content="token endpoint" name="keyword">
 <meta content="draft-watson-oauth-refresh-token-expiration-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
+  xml2rfc 3.30.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1048,12 +1048,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">OAuth RT/Consent Expiration</td>
-<td class="right">June 2025</td>
+<td class="center">OAuth RT/Authorization Expiration</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Watson</td>
-<td class="center">Expires 29 December 2025</td>
+<td class="center">Expires 16 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-watson-oauth-refresh-token-expiration-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-27" class="published">27 June 2025</time>
+<time datetime="2025-08-15" class="published">15 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-29">29 December 2025</time></dd>
+<dd class="expires"><time datetime="2026-02-16">16 February 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1081,11 +1081,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">OAuth 2.0 Refresh Token and Consent Expiration</h1>
+<h1 id="title">OAuth 2.0 Refresh Token and Authorization Expiration</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification extends OAuth 2.0 <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> by adding new token endpoint
-response parameters to specify refresh token expiration and user consent
+response parameters to specify refresh token expiration and user authorization
 expiration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
@@ -1123,7 +1123,7 @@ expiration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1165,10 +1165,10 @@ expiration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-concepts" class="internal xref">Concepts</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
-                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-consent-expiration" class="internal xref">Consent expiration</a></p>
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-authorization-expiration" class="internal xref">Authorization expiration</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-refresh-token-rotation" class="internal xref">Refresh token rotation</a></p>
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-refresh-token-timeout" class="internal xref">Refresh token timeout</a></p>
 </li>
             </ul>
 </li>
@@ -1198,40 +1198,43 @@ expiration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-update-to-authorization-ser" class="internal xref">Update to Authorization Server Metadata</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-user-experience-considerati" class="internal xref">User Experience Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-oauth-parameters-registrati" class="internal xref">OAuth Parameters Registration</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-oauth-parameters-registrati" class="internal xref">OAuth Parameters Registration</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1.2.1">
-                    <p id="section-toc.1-1.10.2.1.2.1.1"><a href="#section-10.1.1" class="auto internal xref">10.1.1</a>.  <a href="#name-registry-contents" class="internal xref">Registry Contents</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.1">
+                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#section-11.1.1" class="auto internal xref">11.1.1</a>.  <a href="#name-registry-contents" class="internal xref">Registry Contents</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-oauth-authorization-server-" class="internal xref">OAuth Authorization Server Metadata Registration</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-oauth-authorization-server-" class="internal xref">OAuth Authorization Server Metadata Registration</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2.2.1">
-                    <p id="section-toc.1-1.10.2.2.2.1.1"><a href="#section-10.2.1" class="auto internal xref">10.2.1</a>.  <a href="#name-registry-contents-2" class="internal xref">Registry Contents</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.1">
+                    <p id="section-toc.1-1.11.2.2.2.1.1"><a href="#section-11.2.1" class="auto internal xref">11.2.1</a>.  <a href="#name-registry-contents-2" class="internal xref">Registry Contents</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1257,7 +1260,7 @@ too sensitive to allow indefinite access (e.g. mail or health data).<a href="#se
 </li>
         <li class="normal" id="section-1-3.2">
           <p id="section-1-3.2.1">The authorization server enforces a maximum duration that refresh tokens may
-be held without rotation. [OAuth 2.1 Sec 4.3.1]<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
+be held without being exchanged on the token endpoint.<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-4">Clients may wish to implement special handling for expiring refresh tokens. For
@@ -1295,27 +1298,28 @@ resource owner and with its authorization.<a href="#section-3-2" class="pilcrow"
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-concepts" class="section-name selfRef">Concepts</a>
       </h2>
 <p id="section-4-1">There are two mechanisms that can affect refresh token expiration.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<div id="consent-expiration">
+<div id="authorization-expiration">
 <section id="section-4.1">
-        <h3 id="name-consent-expiration">
-<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-consent-expiration" class="section-name selfRef">Consent expiration</a>
+        <h3 id="name-authorization-expiration">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-authorization-expiration" class="section-name selfRef">Authorization expiration</a>
         </h3>
-<p id="section-4.1-1">When granting consent for an application to access their data, the user may opt
-to time-limit that consent, especially if the data is sensitive or they aren't
-sure how long they'll continue using the application. The authorization server
-itself may also impose mandatory limits on consent duration.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">When granting authorization for an application to access their data as
+referenced in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> Sec 4.1.1, the user may opt to time-limit that
+authorization, especially if the data is sensitive or they aren't sure how long
+they'll continue using the application. The authorization server itself may also
+impose mandatory limits on authorization duration.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="refresh-token-rotation">
+<div id="refresh-token-timeout">
 <section id="section-4.2">
-        <h3 id="name-refresh-token-rotation">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-refresh-token-rotation" class="section-name selfRef">Refresh token rotation</a>
+        <h3 id="name-refresh-token-timeout">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-refresh-token-timeout" class="section-name selfRef">Refresh token timeout</a>
         </h3>
-<p id="section-4.2-1">Authorization servers implementing refresh token rotation may wish to define a
-maximum amount of time clients can hold a refresh token without rotating it.
-Beyond the security benefit provided by expiring credentials, this also provides
-a convenient mechanism for authorization servers to change refresh token keys
-without having to accept old credentials forever.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">Authorization servers may wish to define a maximum amount of time clients can
+hold a refresh token without exchanging it. Beyond the security benefit provided
+by expiring credentials, this also provides a convenient mechanism for
+authorization servers to change refresh token keys without having to accept old
+credentials forever.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1325,14 +1329,19 @@ without having to accept old credentials forever.<a href="#section-4.2-1" class=
       <h2 id="name-refresh-token-expiration">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-refresh-token-expiration" class="section-name selfRef">Refresh token expiration</a>
       </h2>
-<p id="section-5-1">The refresh token <span class="bcp14">MUST</span> expire no later than the user consent expires. It <span class="bcp14">MAY</span>
-expire earlier if the authorization server also enforces a maximum duration
-between refresh token rotations.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">If the user renews their consent, the authorization server <span class="bcp14">MAY</span> update the
-expiration time of existing refresh tokens if their lifetime was truncated due
-to user consent expiration. The authorization server <span class="bcp14">MUST NOT</span> accept expired
-refresh tokens for any purpose, even if it has no way to update the expiration
-time of existing refresh tokens.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-1">The refresh token <span class="bcp14">MUST NOT</span> expire later than the user authorization expires. It
+<span class="bcp14">MAY</span> expire earlier if the authorization server also enforces a maximum duration
+between refresh token exchanges.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">If the user renews their authorization, the authorization server <span class="bcp14">SHOULD</span> update
+the expiration time of existing refresh tokens if their lifetime was truncated
+due to user authorization expiration. The authorization server <span class="bcp14">MUST NOT</span> accept
+expired refresh tokens for any purpose, even if it has no way to update the
+expiration time of existing refresh tokens.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">Access tokens <span class="bcp14">MUST NOT</span> expire later than the user authorization expires. If the
+user renews their authorization, the authorization server <span class="bcp14">MAY</span> update the
+expiration time of existing access tokens if possible. Resource servers <span class="bcp14">MUST NOT</span>
+accept expired access tokens for any purpose, even if the authorization server
+has no way to update the expiration time of existing access tokens.<a href="#section-5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="token-endpoint-response">
@@ -1350,32 +1359,50 @@ time of existing refresh tokens.<a href="#section-5-2" class="pilcrow">¶</a></p
 <pre>
 refresh_token_expires_in
       The lifetime in seconds of the refresh token. For example, the value
-      "604800" denotes that the refresh token will expire in one week from
-      the time the response was generated. This value SHALL NOT exceed the
-      value in consent_expires_in.
+      604800 denotes that the refresh token will expire in one week from the
+      time the response was generated. This value SHALL NOT exceed the value
+      in authorization_expires_in.
 
-consent_expires_in
-      The lifetime in seconds of the user's consent. For example, the value
-      "2629800" denotes that the consent will expire in one month from the
-      time the response was generated. This value MAY exceed that of
-      refresh_token_expires_in.
+authorization_expires_in
+      The lifetime in seconds of the user's authorization. For example, the
+      value 2629800 denotes that the authorization will expire in one month
+      from the time the response was generated. This value MAY exceed that
+      of refresh_token_expires_in.
 </pre><a href="#section-6.1-1" class="pilcrow">¶</a>
 </div>
+<p id="section-6.1-2">If finite, the authorization server <span class="bcp14">MUST</span> return these values whenever the token
+endpoint response contains the <code>refresh_token</code> field. The authorization server
+<span class="bcp14">MAY</span> return these values even if the response contains no <code>refresh_token</code> field
+in the response, which can be useful in the following example cases:<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-3.1">
+            <p id="section-6.1-3.1.1">For <code>refresh_token_expires_in</code>, the authorization server could have updated
+the existing refresh token lifetime in place.<a href="#section-6.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-3.2">
+            <p id="section-6.1-3.2.1">For <code>authorization_expires_in</code>, the user's authorization lifetime could have
+been modified out of band.<a href="#section-6.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-3.3">
+            <p id="section-6.1-3.3.1">In either case, it can be convenient for the client to receive these values
+in all responses.<a href="#section-6.1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 <div id="infinite-expiration">
 <section id="section-6.1.1">
           <h4 id="name-infinite-expiration">
 <a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-infinite-expiration" class="section-name selfRef">Infinite Expiration</a>
           </h4>
 <p id="section-6.1.1-1">Omitted values indicate that there is no fixed upper bound on the lifetime of
-the credential or consent. If the authorization server has not declared its
-support for refresh token lifetime in the Authorization Server Metadata,
+the credential or authorization. If the authorization server has not declared
+its support for refresh token lifetime in the Authorization Server Metadata,
 omitted response fields could indicate either indefinite validity or simply lack
 of support for this specification. However, infinite expiration and lack of
 information about expiration should be handled by the client in the same way.
 That is to say, the client must always handle refresh token invalidation not
 caused by expiration, such as by explicit user revocation.<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-2">Rather than omitting a response value, an authorization server may choose to
-return a large arbitrary value, e.g. "315569520" for 10 years. This avoids any
+return a large arbitrary value, e.g. 315569520 for 10 years. This avoids any
 ambiguity around support for infinite values while achieving a similar practical
 effect. Clients <span class="bcp14">MUST</span> treat all large values as literals and <span class="bcp14">MUST NOT</span> make any
 assumptions about which may be considered infinite.<a href="#section-6.1.1-2" class="pilcrow">¶</a></p>
@@ -1398,30 +1425,30 @@ expiration and should be sufficient. Upon receiving this error code the client
         <h3 id="name-example">
 <a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-example" class="section-name selfRef">Example</a>
         </h3>
-<p id="section-6.3-1">Suppose an authorization server enforces that refresh tokens must be rotated at
-least once every 7 days, and a user has granted consent to an application for
-access for 30 days. The initial exchange will result in the following response
-values:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-1">Suppose an authorization server enforces that refresh tokens must be exchanged
+at least once every 7 days, and a user has granted authorization to an
+application for access for 30 days. The initial exchange will result in the
+following response values:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.3-2">
 <pre>
-refresh_token_expires_in: "604800"  // 7 days
-consent_expires_in: "2592000"  // 30 days
+refresh_token_expires_in: 604800  // 7 days
+authorization_expires_in: 2592000  // 30 days
 </pre><a href="#section-6.3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.3-3">An exchange 7 days after initial authorization will result in the following
 response values:<a href="#section-6.3-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.3-4">
 <pre>
-refresh_token_expires_in: "604800"  // 7 days
-consent_expires_in: "1987200"  // 23 days
+refresh_token_expires_in: 604800  // 7 days
+authorization_expires_in: 1987200  // 23 days
 </pre><a href="#section-6.3-4" class="pilcrow">¶</a>
 </div>
 <p id="section-6.3-5">An exchange 28 days after initial authorization will result in the following
 response values:<a href="#section-6.3-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.3-6">
 <pre>
-refresh_token_expires_in: "172800"  // 2 days
-consent_expires_in: "172800"  // 2 days
+refresh_token_expires_in: 172800  // 2 days
+authorization_expires_in: 172800  // 2 days
 </pre><a href="#section-6.3-6" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1438,85 +1465,94 @@ OAuth 2.0 Authorization Server Metadata <span>[<a href="#RFC8414" class="cite xr
 metadata:<a href="#section-7-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-7-2">
 <pre>
-refresh_token_expiration_types
+refresh_token_expiration_types_supported
     OPTIONAL. JSON array of supported expiration types. The possible values
-    are "consent" and "credential".
+    are "authorization" and "credential".
 </pre><a href="#section-7-2" class="pilcrow">¶</a>
 </div>
 <p id="section-7-3">If the authorization server omits expiration time response fields to indicate
-indefinite validity, it <span class="bcp14">MUST</span> declare <code>refresh_token_expiration_types</code> in its
-metadata to indicate to the client that it's aware of this spec.<a href="#section-7-3" class="pilcrow">¶</a></p>
+indefinite validity, it <span class="bcp14">MUST</span> declare <code>refresh_token_expiration_types_supported</code>
+in its metadata to indicate to the client that it's aware of this spec.<a href="#section-7-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="user-experience-considerations">
+<section id="section-8">
+      <h2 id="name-user-experience-considerati">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-user-experience-considerati" class="section-name selfRef">User Experience Considerations</a>
+      </h2>
+<p id="section-8-1">TODO<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-security-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">While it is possible to allow refresh token expiration to exceed
-that of user consent expiration if the authorization server checks both
-timestamps when validating a refresh token, this is a potentially dangerous
-source of bugs in systems with complicated user consent models. By requiring
-refresh tokens to expire no later than user consent expires, there is less risk
-of bugs that accidentally provide data access to the client beyond the term of
-the user's consent.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-9-1">While it is possible to allow refresh token expiration to exceed that of user
+authorization expiration if the authorization server checks both timestamps when
+validating a refresh token, this is a potentially dangerous source of bugs in
+systems with complicated user authorization models. By requiring refresh tokens
+to expire no later than user authorization expires, there is less risk of bugs
+that accidentally provide data access to the client beyond the term of the
+user's authorization.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">TODO: Discuss relation to token rotation [OAuth 2.1 Sec 4.3.1]<a href="#section-9-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="privacy-considerations">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-privacy-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
       </h2>
-<p id="section-9-1">Allowing users to time-limit their consent is a privacy improvement. While this
-was already doable in regular OAuth implementations, the potential interruption
-of service for the user may have discouraged implementation of the feature. This
-specification provides a standardized way to mitigate that concern and should
-lead to greater adoption of time-limited consent.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">Allowing users to time-limit their authorization is a privacy improvement. While
+this was already doable in regular OAuth implementations, the potential
+interruption of service for the user may have discouraged implementation of the
+feature. This specification provides a standardized way to mitigate that concern
+and should lead to greater adoption of time-limited authorization.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="oauth-parameters-registration">
-<section id="section-10.1">
+<section id="section-11.1">
         <h3 id="name-oauth-parameters-registrati">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-oauth-parameters-registrati" class="section-name selfRef">OAuth Parameters Registration</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-oauth-parameters-registrati" class="section-name selfRef">OAuth Parameters Registration</a>
         </h3>
-<p id="section-10.1-1">This specification registers the following OAuth parameter definitions in the
-IANA OAuth Parameters registry.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.1-1">This specification registers the following OAuth parameter definitions in the
+IANA OAuth Parameters registry.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
 <div id="registry-contents">
-<section id="section-10.1.1">
+<section id="section-11.1.1">
           <h4 id="name-registry-contents">
-<a href="#section-10.1.1" class="section-number selfRef">10.1.1. </a><a href="#name-registry-contents" class="section-name selfRef">Registry Contents</a>
+<a href="#section-11.1.1" class="section-number selfRef">11.1.1. </a><a href="#name-registry-contents" class="section-name selfRef">Registry Contents</a>
           </h4>
 <ul class="normal">
-<li class="normal" id="section-10.1.1-1.1">
-              <p id="section-10.1.1-1.1.1">Name: refresh_token_expires_in<a href="#section-10.1.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.1.1-1.1">
+              <p id="section-11.1.1-1.1.1">Name: refresh_token_expires_in<a href="#section-11.1.1-1.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.1-1.1.2.1">
-                  <p id="section-10.1.1-1.1.2.1.1">Parameter Usage Location: token response<a href="#section-10.1.1-1.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.1.1-1.1.2.1">
+                  <p id="section-11.1.1-1.1.2.1.1">Parameter Usage Location: token response<a href="#section-11.1.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.1-1.1.2.2">
-                  <p id="section-10.1.1-1.1.2.2.1">Change Controller: IETF<a href="#section-10.1.1-1.1.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-11.1.1-1.1.2.2">
+                  <p id="section-11.1.1-1.1.2.2.1">Change Controller: IETF<a href="#section-11.1.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.1-1.1.2.3">
-                  <p id="section-10.1.1-1.1.2.3.1">Reference: This document<a href="#section-10.1.1-1.1.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-11.1.1-1.1.2.3">
+                  <p id="section-11.1.1-1.1.2.3.1">Reference: This document<a href="#section-11.1.1-1.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.1-1.2">
-              <p id="section-10.1.1-1.2.1">Name: consent_expires_in<a href="#section-10.1.1-1.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-11.1.1-1.2">
+              <p id="section-11.1.1-1.2.1">Name: authorization_expires_in<a href="#section-11.1.1-1.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.1-1.2.2.1">
-                  <p id="section-10.1.1-1.2.2.1.1">Parameter Usage Location: token response<a href="#section-10.1.1-1.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.1.1-1.2.2.1">
+                  <p id="section-11.1.1-1.2.2.1.1">Parameter Usage Location: token response<a href="#section-11.1.1-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.1-1.2.2.2">
-                  <p id="section-10.1.1-1.2.2.2.1">Change Controller: IETF<a href="#section-10.1.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-11.1.1-1.2.2.2">
+                  <p id="section-11.1.1-1.2.2.2.1">Change Controller: IETF<a href="#section-11.1.1-1.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.1-1.2.2.3">
-                  <p id="section-10.1.1-1.2.2.3.1">Reference: This document<a href="#section-10.1.1-1.2.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-11.1.1-1.2.2.3">
+                  <p id="section-11.1.1-1.2.2.3.1">Reference: This document<a href="#section-11.1.1-1.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -1526,30 +1562,30 @@ IANA OAuth Parameters registry.<a href="#section-10.1-1" class="pilcrow">¶</a><
 </section>
 </div>
 <div id="oauth-authorization-server-metadata-registration">
-<section id="section-10.2">
+<section id="section-11.2">
         <h3 id="name-oauth-authorization-server-">
-<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-oauth-authorization-server-" class="section-name selfRef">OAuth Authorization Server Metadata Registration</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-oauth-authorization-server-" class="section-name selfRef">OAuth Authorization Server Metadata Registration</a>
         </h3>
-<p id="section-10.2-1">This specification registers the following Authorization Server Metadata
-definitions in the IANA OAuth Authorization Server Metadata registry.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">This specification registers the following Authorization Server Metadata
+definitions in the IANA OAuth Authorization Server Metadata registry.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
 <div id="registry-contents-1">
-<section id="section-10.2.1">
+<section id="section-11.2.1">
           <h4 id="name-registry-contents-2">
-<a href="#section-10.2.1" class="section-number selfRef">10.2.1. </a><a href="#name-registry-contents-2" class="section-name selfRef">Registry Contents</a>
+<a href="#section-11.2.1" class="section-number selfRef">11.2.1. </a><a href="#name-registry-contents-2" class="section-name selfRef">Registry Contents</a>
           </h4>
 <ul class="normal">
-<li class="normal" id="section-10.2.1-1.1">
-              <p id="section-10.2.1-1.1.1">Metadata Name: refresh_token_expiration_types<a href="#section-10.2.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.2.1-1.1">
+              <p id="section-11.2.1-1.1.1">Metadata Name: refresh_token_expiration_types<a href="#section-11.2.1-1.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.2.1-1.1.2.1">
-                  <p id="section-10.2.1-1.1.2.1.1">Metadata Description: What types of refresh token expiration are
-supported by the authorization server<a href="#section-10.2.1-1.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.2.1-1.1.2.1">
+                  <p id="section-11.2.1-1.1.2.1.1">Metadata Description: What types of refresh token expiration are
+supported by the authorization server<a href="#section-11.2.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.2.1-1.1.2.2">
-                  <p id="section-10.2.1-1.1.2.2.1">Change Controller: IETF<a href="#section-10.2.1-1.1.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-11.2.1-1.1.2.2">
+                  <p id="section-11.2.1-1.1.2.2.1">Change Controller: IETF<a href="#section-11.2.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.2.1-1.1.2.3">
-                  <p id="section-10.2.1-1.1.2.3.1">Reference: This document<a href="#section-10.2.1-1.1.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-11.2.1-1.1.2.3">
+                  <p id="section-11.2.1-1.1.2.3.1">Reference: This document<a href="#section-11.2.1-1.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -1561,9 +1597,9 @@ supported by the authorization server<a href="#section-10.2.1-1.1.2.1.1" class="
 </section>
 </div>
 <div id="sec-normative-references">
-<section id="section-11">
+<section id="section-12">
       <h2 id="name-normative-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
