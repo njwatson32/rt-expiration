@@ -4,8 +4,8 @@
 
 Web Authorization Protocol                                     N. Watson
 Internet-Draft                                               Google, LLC
-Intended status: Informational                            15 August 2025
-Expires: 16 February 2026
+Intended status: Informational                            19 August 2025
+Expires: 20 February 2026
 
 
           OAuth 2.0 Refresh Token and Authorization Expiration
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 February 2026.
+   This Internet-Draft will expire on 20 February 2026.
 
 Copyright Notice
 
@@ -77,7 +77,8 @@ Table of Contents
    5.  Refresh token expiration
    6.  Token endpoint response
      6.1.  Successful response
-       6.1.1.  Infinite Expiration
+       6.1.1.  Relationship of authorization_expires_in to scopes
+       6.1.2.  Infinite Expiration
      6.2.  Error response
      6.3.  Example
    7.  Update to Authorization Server Metadata
@@ -89,7 +90,9 @@ Table of Contents
        11.1.1.  Registry Contents
      11.2.  OAuth Authorization Server Metadata Registration
        11.2.1.  Registry Contents
-   12. Normative References
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -182,17 +185,18 @@ Table of Contents
 
 6.1.  Successful response
 
-refresh_token_expires_in
+refresh_token_inactivity_timeout
       The lifetime in seconds of the refresh token. For example, the value
       604800 denotes that the refresh token will expire in one week from the
       time the response was generated. This value SHALL NOT exceed the value
       in authorization_expires_in.
 
 authorization_expires_in
-      The lifetime in seconds of the user's authorization. For example, the
+      The lifetime in seconds of the user's authorization for the scopes
+      contained in the issued or presented refresh token. For example, the
       value 2629800 denotes that the authorization will expire in one month
       from the time the response was generated. This value MAY exceed that
-      of refresh_token_expires_in.
+      of refresh_token_inactivity_timeout.
 
    If finite, the authorization server MUST return these values whenever
    the token endpoint response contains the refresh_token field.  The
@@ -200,16 +204,36 @@ authorization_expires_in
    contains no refresh_token field in the response, which can be useful
    in the following example cases:
 
-   *  For refresh_token_expires_in, the authorization server could have
-      updated the existing refresh token lifetime in place.
+   *  For refresh_token_inactivity_timeout, the authorization server
+      could have updated the existing refresh token lifetime in place.
 
    *  For authorization_expires_in, the user's authorization lifetime
       could have been modified out of band.
 
-   *  In either case, it can be convenient for the client to receive
-      these values in all responses.
+   *  In all cases, it can be convenient for the client to receive these
+      values in each response.
 
-6.1.1.  Infinite Expiration
+6.1.1.  Relationship of authorization_expires_in to scopes
+
+   Though authorization_expires_in is returned from the token endpoint
+   when refresh tokens are used, it corresponds to the user's
+   authorization for _scopes_ (or finer-grained access through RAR
+   [RFC9396]) rather than individual tokens.  The authorization server
+   SHOULD ensure consistent lifetimes across multiple refresh tokens for
+   the same scopes.
+
+   Tying authorization lifetime to scopes means it's possible to have
+   some access valid for one duration and other access valid for a
+   different duration.  For example, a user could grant indefinite
+   access for the openid scope and short-lived access for a calendar
+   scope.
+
+   TODO: Is it worth getting into the weeds on an AS allowing scopes
+   with different expirations in the same refresh token?  (Probably not,
+   as then a singular authorization_expires_in field is insufficient for
+   the AS to communicate this to the client.)
+
+6.1.2.  Infinite Expiration
 
    Omitted values indicate that there is no fixed upper bound on the
    lifetime of the credential or authorization.  If the authorization
@@ -242,19 +266,19 @@ authorization_expires_in
    authorization to an application for access for 30 days.  The initial
    exchange will result in the following response values:
 
-   refresh_token_expires_in: 604800  // 7 days
+   refresh_token_inactivity_timeout: 604800  // 7 days
    authorization_expires_in: 2592000  // 30 days
 
    An exchange 7 days after initial authorization will result in the
    following response values:
 
-   refresh_token_expires_in: 604800  // 7 days
+   refresh_token_inactivity_timeout: 604800  // 7 days
    authorization_expires_in: 1987200  // 23 days
 
    An exchange 28 days after initial authorization will result in the
    following response values:
 
-   refresh_token_expires_in: 172800  // 2 days
+   refresh_token_inactivity_timeout: 172800  // 2 days
    authorization_expires_in: 172800  // 2 days
 
 7.  Update to Authorization Server Metadata
@@ -274,7 +298,18 @@ refresh_token_expiration_types_supported
 
 8.  User Experience Considerations
 
-   TODO
+   While clients must be able to gracefully handle tokens' expiring at
+   any time, the user experience may suffer if there's an unintended
+   interruption of service.  This degradation of experience would most
+   likely be felt by users of clients running in the background, such as
+   task or travel management apps that rely on access to a user's
+   calendar or inbox.
+
+   If an application recognizes that its access is nearing expiration,
+   it can proactively prompt the user for reauthorization next time
+   they're "in the loop" (e.g. using a parameter like prompt=consent
+   from [OpenID]), or even communicate to the user out of band that
+   their granted access is expiring.
 
 9.  Security Considerations
 
@@ -287,7 +322,11 @@ refresh_token_expiration_types_supported
    accidentally provide data access to the client beyond the term of the
    user's authorization.
 
-   TODO: Discuss relation to token rotation [OAuth 2.1 Sec 4.3.1]
+   Authorization servers implementing token rotation on every refresh
+   [OAuth 2.1] Sec 4.3.1 may wish to enforce a maximum duration that a
+   refresh token may be held without rotation, and this specification
+   allows that duration to be communicated as part of the API rather
+   than relying on documentation.
 
 10.  Privacy Considerations
 
@@ -307,7 +346,7 @@ refresh_token_expiration_types_supported
 
 11.1.1.  Registry Contents
 
-   *  Name: refresh_token_expires_in
+   *  Name: refresh_token_inactivity_timeout
 
       -  Parameter Usage Location: token response
 
@@ -331,7 +370,7 @@ refresh_token_expiration_types_supported
 
 11.2.1.  Registry Contents
 
-   *  Metadata Name: refresh_token_expiration_types
+   *  Metadata Name: refresh_token_expiration_types_supported
 
       -  Metadata Description: What types of refresh token expiration
          are supported by the authorization server
@@ -340,7 +379,9 @@ refresh_token_expiration_types_supported
 
       -  Reference: This document
 
-12.  Normative References
+12.  References
+
+12.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -359,6 +400,17 @@ refresh_token_expiration_types_supported
               Authorization Server Metadata", RFC 8414,
               DOI 10.17487/RFC8414, June 2018,
               <https://www.rfc-editor.org/rfc/rfc8414>.
+
+   [RFC9396]  Lodderstedt, T., Richer, J., and B. Campbell, "OAuth 2.0
+              Rich Authorization Requests", RFC 9396,
+              DOI 10.17487/RFC9396, May 2023,
+              <https://www.rfc-editor.org/rfc/rfc9396>.
+
+12.2.  Informative References
+
+   [OpenID]   Sakimura, N., Bradley, J., Jones, M., de Medeiros, B., and
+              C. Mortimore, "OpenID Connect Core 1.0", November 2014,
+              <https://openid.net/specs/openid-connect-core-1_0.html>.
 
 Acknowledgments
 
