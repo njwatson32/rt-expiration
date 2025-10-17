@@ -33,9 +33,9 @@ author:
 normative:
   RFC6749:
   RFC8414:
-  RFC9396:
 
 informative:
+  RFC9396:
   OpenID:
     title: OpenID Connect Core 1.0
     target: https://openid.net/specs/openid-connect-core-1_0.html
@@ -107,8 +107,8 @@ impose mandatory limits on authorization duration.
 Authorization servers may wish to define a maximum amount of time clients can
 hold a refresh token without exchanging it. Beyond the security benefit provided
 by expiring credentials, this also provides a convenient mechanism for
-authorization servers to change refresh token keys without having to accept old
-credentials forever.
+authorization servers to ensure there aren't ancient valid credentials out in
+the wild, which could complicate tasks like refresh token key rotation.
 
 # Refresh token expiration
 
@@ -134,25 +134,26 @@ This specification introduces two new response parameters.
 
 ## Successful response
 
-    refresh_token_inactivity_timeout
-          The lifetime in seconds of the refresh token. For example, the value
-          604800 denotes that the refresh token will expire in one week from the
-          time the response was generated. This value SHALL NOT exceed the value
-          in authorization_expires_in.
+    refresh_token_timeout
+          The time in seconds that the refresh token may be held by the client
+          without exchanging. For example, the value 604800 denotes that the
+          refresh token will expire in one week from the time the response was
+          generated. This value SHALL NOT exceed the value in
+          authorization_expires_in.
 
     authorization_expires_in
           The lifetime in seconds of the user's authorization for the scopes
           contained in the issued or presented refresh token. For example, the
           value 2629800 denotes that the authorization will expire in one month
           from the time the response was generated. This value MAY exceed that
-          of refresh_token_inactivity_timeout.
+          of refresh_token_timeout.
 
 If finite, the authorization server MUST return these values whenever the token
 endpoint response contains the `refresh_token` field. The authorization server
 MAY return these values even if the response contains no `refresh_token` field
 in the response, which can be useful in the following example cases:
 
-*   For `refresh_token_inactivity_timeout`, the authorization server could have
+*   For `refresh_token_timeout`, the authorization server could have
     updated the existing refresh token lifetime in place.
 *   For `authorization_expires_in`, the user's authorization lifetime could have
     been modified out of band.
@@ -171,11 +172,6 @@ Tying authorization lifetime to scopes means it's possible to have some access
 valid for one duration and other access valid for a different duration. For
 example, a user could grant indefinite access for the `openid` scope and
 short-lived access for a calendar scope.
-
-TODO: Is it worth getting into the weeds on an AS allowing scopes with different
-expirations in the same refresh token? (Probably not, as then a singular
-`authorization_expires_in` field is insufficient for the AS to communicate this
-to the client.)
 
 ### Infinite Expiration
 
@@ -207,19 +203,19 @@ at least once every 7 days, and a user has granted authorization to an
 application for access for 30 days. The initial exchange will result in the
 following response values:
 
-    refresh_token_inactivity_timeout: 604800  // 7 days
+    refresh_token_timeout: 604800  // 7 days
     authorization_expires_in: 2592000  // 30 days
 
 An exchange 7 days after initial authorization will result in the following
 response values:
 
-    refresh_token_inactivity_timeout: 604800  // 7 days
+    refresh_token_timeout: 604800  // 7 days
     authorization_expires_in: 1987200  // 23 days
 
 An exchange 28 days after initial authorization will result in the following
 response values:
 
-    refresh_token_inactivity_timeout: 172800  // 2 days
+    refresh_token_timeout: 172800  // 2 days
     authorization_expires_in: 172800  // 2 days
 
 # Update to Authorization Server Metadata
@@ -259,8 +255,8 @@ to expire no later than user authorization expires, there is less risk of bugs
 that accidentally provide data access to the client beyond the term of the
 user's authorization.
 
-Authorization servers implementing token rotation on every refresh [OAuth 2.1]
-Sec 4.3.1 may wish to enforce a maximum duration that a refresh token may be
+Authorization servers implementing token rotation on every refresh [OAuth 2.1
+Sec 4.3.1] may wish to enforce a maximum duration that a refresh token may be
 held without rotation, and this specification allows that duration to be
 communicated as part of the API rather than relying on documentation.
 
@@ -281,7 +277,7 @@ IANA OAuth Parameters registry.
 
 ### Registry Contents
 
-*   Name: refresh_token_inactivity_timeout
+*   Name: refresh_token_timeout
     *   Parameter Usage Location: token response
     *   Change Controller: IETF
     *   Reference: This document
