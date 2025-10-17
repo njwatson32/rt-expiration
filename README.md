@@ -1,8 +1,8 @@
 <!-- regenerate: on (set to off if you edit this file) -->
 
-# OAuth 2.0 Refresh Token and Consent Expiration
+# OAuth 2.0 Refresh Token and Authorization Expiration
 
-This is the working area for the individual Internet-Draft, "OAuth 2.0 Refresh Token and Consent Expiration".
+This is the working area for the individual Internet-Draft, "OAuth 2.0 Refresh Token and Authorization Expiration".
 
 * [Editor's Copy](https://njwatson32.github.io/rt-expiration/#go.draft-watson-oauth-refresh-token-expiration.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-watson-oauth-refresh-token-expiration)
