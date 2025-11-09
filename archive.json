@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-27T01:10:17.208167+00:00",
+  "timestamp": "2025-11-09T01:01:43.155617+00:00",
   "repo": "njwatson32/rt-expiration",
   "labels": [
     {
@@ -110,6 +110,54 @@
           "updatedAt": "2025-07-23T17:26:56Z"
         }
       ]
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOOTpjy87WtYHY",
+      "title": "Complexity in authorization lifetimes being bound to scopes",
+      "url": "https://github.com/njwatson32/rt-expiration/issues/4",
+      "state": "OPEN",
+      "author": "gffletch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This issue of authorizations being bound to scopes is called out in the spec but not really addressed. \n\n> Tying authorization lifetime to scopes means it's possible to have some access valid for one duration and other access valid for a different duration. For example, a user could grant indefinite access for the openid scope and short-lived access for a calendar scope.\n\nThe spec also refers to the use of RAR which could generate a very short lived token (say 10 mins) but the system sets the access token expiry to be a minute so the client has to get a new access token via the refresh_token grant. Following this spec then the refresh_token MUST expire in 10 mins.\n\n",
+      "createdAt": "2025-11-07T22:17:34Z",
+      "updatedAt": "2025-11-07T22:17:34Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOOTpjy87WtboO",
+      "title": "Are clients expected to manage only a single refresh_token per AS?",
+      "url": "https://github.com/njwatson32/rt-expiration/issues/5",
+      "state": "OPEN",
+      "author": "gffletch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I'm wondering if one way to deal with the issue that the client may be required to prompt the user for new authorization more than desired is to allow the client to manage multiple refresh_tokens making the relationship between refresh_tokens and issued scopes closer to 1:1. \n\nA user may want to authorize explicitly access to their financial data (authorization time = 10 mins) but the client doesn't need the financial data very often so it lets that associated refresh_token expire and only when the user choses to see that data via the UI then goes through the flow to get a new token.\n\nIf the client can manage different sets of scopes by managing multiple refresh_tokens it allows the better management of the user experience.",
+      "createdAt": "2025-11-07T22:22:05Z",
+      "updatedAt": "2025-11-07T22:22:05Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOOTpjy87Wtd6C",
+      "title": "Is the user required to \"re-authorize\" the client via a client initiated flow?",
+      "url": "https://github.com/njwatson32/rt-expiration/issues/6",
+      "state": "OPEN",
+      "author": "gffletch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In the case of say a background task which I've authorized to read my mail and the AS determines that I must \"re-authorize\" every 30 days, is it possible that I could just go to the mail service and re-authorize there rather than having to go through the client's initiated OAuth flow? \n\nIf this become a common pattern I might have multiple clients that are accessing multiple resources protected by the AS, and it would be easier for me to go to the AS and re-authorize them all at the AS rather than going through a new OAuth flow for each client.",
+      "createdAt": "2025-11-07T22:25:07Z",
+      "updatedAt": "2025-11-07T22:25:07Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
